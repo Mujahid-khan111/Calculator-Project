@@ -1,33 +1,31 @@
-let expression = ''; 
+const container = document.getElementById("mainContainer");
+const input = document.getElementById("input");
 
-function clearDisplay() {
-    expression = ''; 
-    updateDisplay('');
-}
+container.addEventListener("click", calculatorFn);
 
-function appendValue(value) {
-    expression += value; 
-    updateDisplay(expression);
-}
+function calculatorFn(event) {
+  event.preventDefault();
 
-function setOperator(op) {
-    if (expression === '' || /[+\-*/]$/.test(expression)) return; 
-    expression += op;
-    updateDisplay(expression);
-}
+  if (event.target.classList.contains("btn")) {
+    let value = event.target.value;
 
-function calculate() {
-    if (expression === '' || /[+\-*/]$/.test(expression)) return; 
-    try {
-        const result = eval(expression); 
-        updateDisplay(result);
-        expression = result.toString(); 
-    } catch (error) {
-        updateDisplay('Error');
-        expression = ''; 
+    if (value === "AC") {
+      input.value = "";
+    } else if (value === "c") {
+      input.value = input.value.slice(0, -1);
+    } else if (value === "=") {
+      input.value = eval(input.value) || "0";
+    } else {
+      const lastChar = input.value.slice(-1);
+
+      if (
+        ["+", "-", "*", "/", "%"].includes(value) &&
+        ["+", "-", "*", "/", "%"].includes(lastChar)
+      ) {
+        input.value = input.value.slice(0, -1) + value;
+      } else {
+        input.value += value;
+      }
     }
-}
-
-function updateDisplay(value) {
-    document.getElementById('display').value = value;
+  }
 }
